@@ -7,12 +7,13 @@ import {
   Container,
   Group,
   Text,
+  Space,
 } from "@mantine/core";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { AddTodoInput, addTodoSchema } from "../schema/todo-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TodoList from "../components/TodoList";
 
 export type responseData = {
@@ -25,6 +26,9 @@ export type todoData = {
 };
 
 export default function HomePage() {
+  const [ec2Instance, setEc2Instance] = useState<string>();
+  const [availability, setAvailability] = useState<string>();
+
   const {
     register,
     handleSubmit,
@@ -32,6 +36,21 @@ export default function HomePage() {
     reset,
   } = useForm<AddTodoInput>({ resolver: zodResolver(addTodoSchema) });
   const [data, setData] = useState<responseData>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const metadata = await axios.put("/api/instance");
+      const metadata2 = await axios.put("/api/az");
+
+      const dataAll = await metadata.data;
+      const dataAll2 = await metadata2.data;
+
+      setEc2Instance(dataAll.instanceId);
+      setAvailability(dataAll2.availability);
+    };
+
+    fetchData().catch(console.error);
+  }, []);
 
   const onSubmit: SubmitHandler<AddTodoInput> = async (data) => {
     const postResponse = await axios.post("/api/todos", data);
@@ -47,7 +66,17 @@ export default function HomePage() {
   return (
     <div>
       <Container size={460} my={30}>
-        <Title ta="center">Todo App</Title>
+        <Title ta="center" order={1}>
+          Todo App
+        </Title>
+        <Space h="md" />
+
+        <Title ta="center" order={4}>
+          Instance-ID: {ec2Instance}
+        </Title>
+        <Title ta="center" order={4}>
+          Availability Zone: {availability}
+        </Title>
 
         <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
           <form onSubmit={handleSubmit(onSubmit)}>
