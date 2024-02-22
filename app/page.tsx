@@ -39,14 +39,36 @@ export default function HomePage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const metadata = await axios.put("/api/instance");
-      const metadata2 = await axios.put("/api/az");
+      let token;
+      let instanceId;
+      let availabilityTemp;
 
-      const dataAll = await metadata.data;
-      const dataAll2 = await metadata2.data;
+      await fetch("http://169.254.169.254/latest/api/token", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-aws-ec2-metadata-token-ttl-seconds": "3600",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => (token = data));
 
-      setEc2Instance(dataAll.instanceId);
-      setAvailability(dataAll2.availability);
+      await fetch("http://169.254.169.254/latest/meta-data/instance-id", {
+        method: "GET",
+        headers: { "X-aws-ec2-metadata-token": `${token}` },
+      })
+        .then((response) => response.json())
+        .then((data) => (instanceId = data));
+
+      await fetch(
+        "http://169.254.169.254/latest/meta-data/placement/availability-zone-id",
+        { method: "GET", headers: { "X-aws-ec2-metadata-token": `${token}` } }
+      )
+        .then((response) => response.json())
+        .then((data) => (availabilityTemp = data));
+
+      setEc2Instance(instanceId);
+      setAvailability(availabilityTemp);
     };
 
     fetchData().catch(console.error);
