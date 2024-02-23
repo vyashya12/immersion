@@ -21,31 +21,16 @@ type todoData = {
 }
 
 export async function GET() {
-    // const todos = await prisma.todotable.findMany()
-    // return NextResponse.json({todos})
-    const response = await s3.send(new ListObjectsCommand({ Bucket }));
-    return NextResponse.json(response?.Contents ?? []);
-  } 
-   
-  
-  
-  export async function POST(req: Request) {
-    // const body: todoData = await req.json()
-    // const todo = await prisma.todotable.create({
-    //   data: body
-    // })
-    // return NextResponse.json({message: 'Added Todo', todo}, {status: 200})
-      // const formData = await req.formData();
-      // const files = formData.getAll("file") as File[];
-    
-      console.log(req.formData())
-      // const response = await Promise.all(
-      //   files.map(async (file) => {
-      //     // not sure why I have to override the types here
-      //     const Body = (await file.arrayBuffer()) as Buffer;
-      //     s3.send(new PutObjectCommand({ Bucket, Key: file.name, Body }));
-      //   })
-      // );
-    
-      return NextResponse.json({message: "Yes we hit s3 function"});
-  }
+  const todos = await prisma.todotable.findMany()
+  return NextResponse.json({todos})
+} 
+ 
+
+
+export async function POST(req: Request) {
+  const body: todoData = await req.json()
+  const todo = await prisma.todotable.create({
+    data: body
+  })
+  return NextResponse.json({message: 'Added Todo', todo}, {status: 200})
+}
