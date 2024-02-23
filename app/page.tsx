@@ -51,13 +51,18 @@ export default function HomePage() {
         <Title ta="center" order={1}>
           Todo App
         </Title>
-        <Space h="md" />
 
         <Title ta="center" order={4}>
-          Instance-ID: {process.env.NEXT_PUBLIC_INSTANCEID}
+          Instance-ID:{" "}
+          {process.env.NEXT_PUBLIC_INSTANCEID
+            ? process.env.NEXT_PUBLIC_INSTANCEID.toString()
+            : null}
         </Title>
         <Title ta="center" order={4}>
-          Availability Zone: {process.env.NEXT_PUBLIC_AZ}
+          Availability Zone:{" "}
+          {process.env.NEXT_PUBLIC_AZ
+            ? process.env.NEXT_PUBLIC_AZ.toString()
+            : null}
         </Title>
 
         <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
