@@ -45,6 +45,10 @@ export default function HomePage() {
     setData(todos);
     return response;
   };
+
+  let ec2Id = process.env.NEXT_PUBLIC_INSTANCEID;
+  let avaz = process.env.NEXT_PUBLIC_AZ;
+
   return (
     <div>
       <Container size={460} my={30}>
@@ -52,18 +56,36 @@ export default function HomePage() {
           Todo App
         </Title>
 
-        <Title ta="center" order={4}>
-          Instance-ID:{" "}
-          {process.env.NEXT_PUBLIC_INSTANCEID
-            ? process.env.NEXT_PUBLIC_INSTANCEID.toString()
-            : null}
-        </Title>
-        <Title ta="center" order={4}>
-          Availability Zone:{" "}
-          {process.env.NEXT_PUBLIC_AZ
-            ? process.env.NEXT_PUBLIC_AZ.toString()
-            : null}
-        </Title>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: "10px",
+          }}
+        >
+          <Title ta="center" order={4}>
+            Instance ID:
+          </Title>
+          <Title ta="center" order={4}>
+            {ec2Id}
+          </Title>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: "10px",
+          }}
+        >
+          <Title ta="center" order={4}>
+            Availability Zone:
+          </Title>
+          <Title ta="center" order={4}>
+            {avaz}
+          </Title>
+        </div>
 
         <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
           <form onSubmit={handleSubmit(onSubmit)}>
