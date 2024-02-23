@@ -13,7 +13,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { AddTodoInput, addTodoSchema } from "../schema/todo-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TodoList from "../components/TodoList";
 
 export type responseData = {
@@ -26,9 +26,6 @@ export type todoData = {
 };
 
 export default function HomePage() {
-  const [ec2Instance, setEc2Instance] = useState<string>();
-  const [availability, setAvailability] = useState<string>();
-
   const {
     register,
     handleSubmit,
@@ -36,43 +33,6 @@ export default function HomePage() {
     reset,
   } = useForm<AddTodoInput>({ resolver: zodResolver(addTodoSchema) });
   const [data, setData] = useState<responseData>();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      let token;
-      let instanceId;
-      let availabilityTemp;
-
-      await fetch("http://169.254.169.254/latest/api/token", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "X-aws-ec2-metadata-token-ttl-seconds": "3600",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => (token = data));
-
-      await fetch("http://169.254.169.254/latest/meta-data/instance-id", {
-        method: "GET",
-        headers: { "X-aws-ec2-metadata-token": `${token}` },
-      })
-        .then((response) => response.json())
-        .then((data) => (instanceId = data));
-
-      await fetch(
-        "http://169.254.169.254/latest/meta-data/placement/availability-zone-id",
-        { method: "GET", headers: { "X-aws-ec2-metadata-token": `${token}` } }
-      )
-        .then((response) => response.json())
-        .then((data) => (availabilityTemp = data));
-
-      setEc2Instance(instanceId);
-      setAvailability(availabilityTemp);
-    };
-
-    fetchData().catch(console.error);
-  }, []);
 
   const onSubmit: SubmitHandler<AddTodoInput> = async (data) => {
     const postResponse = await axios.post("/api/todos", data);
@@ -94,10 +54,10 @@ export default function HomePage() {
         <Space h="md" />
 
         <Title ta="center" order={4}>
-          Instance-ID: {ec2Instance}
+          Instance-ID: {process.env.NEXT_PUBLIC_INSTANCEID}
         </Title>
         <Title ta="center" order={4}>
-          Availability Zone: {availability}
+          Availability Zone: {process.env.NEXT_PUBLIC_AZ}
         </Title>
 
         <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
