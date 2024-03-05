@@ -7,8 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model todotable {
+model imageTable {
   id          Int    @id @default(autoincrement())
-  title       String @db.VarChar(255)
-  description String @db.VarChar(2550)
+  description String @db.VarChar(255)
+  imageName   String @db.VarChar(255)
 }

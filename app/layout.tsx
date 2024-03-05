@@ -2,10 +2,11 @@ import "@mantine/core/styles.css";
 import React from "react";
 import { MantineProvider, ColorSchemeScript } from "@mantine/core";
 import { theme } from "../theme";
+import "@mantine/dropzone/styles.css";
 
 export const metadata = {
   title: "Exabytes CIS",
-  description: "Todo app for CIS purposes",
+  description: "Image Uploader app for CIS purposes",
 };
 
 export default function RootLayout({ children }: { children: any }) {
