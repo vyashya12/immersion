@@ -71,10 +71,10 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
       second: "2-digit",
     })
     .replace(/\//g, "-")}.jpg`;
-  if (req.headers.get("Content-Type") === "multipart/form-data") {
+  if (req.headers.get("path") == "dummyUpload") {
     try {
       const formData = await req.formData();
-      const fileimage = formData.get("file") as Blob | null;
+      const fileimage = formData.get("files") as Blob | null;
       const descriptionText = formData.get("description") as string;
 
       if (!fileimage) {
@@ -91,6 +91,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
           { status: 400 }
         );
       }
+      console.log(buffer);
       client.send(
         new PutObjectCommand({
           Bucket: process.env.NEXT_PUBLIC_BUCKETNAME,

@@ -73,6 +73,7 @@ export default function HomePage() {
       files: fileData!,
     });
     reset();
+    console.log(postResponse);
     setFileData([]);
   };
 
