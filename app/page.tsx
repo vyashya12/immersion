@@ -223,7 +223,7 @@ export default function HomePage() {
             </Group>
           </form>
         </Paper>
-        {data?.dataList.length! > 0 ? (
+        {/* {data?.dataList.length! > 0 ? (
           <SimpleGrid
             cols={{ base: 1, sm: 2, lg: 5 }}
             spacing={{ base: 10, sm: "xl" }}
@@ -231,7 +231,7 @@ export default function HomePage() {
           >
             <ImageView dataList={data?.dataList!} />
           </SimpleGrid>
-        ) : null}
+        ) : null} */}
       </Container>
     </div>
   );
