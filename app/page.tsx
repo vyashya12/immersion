@@ -17,9 +17,14 @@ import { AddImageInput, addImageSchema } from "../schema/image-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
-import ImageView from "../components/ImageView";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
+import {
+  IconHttpDelete,
+  IconPhoto,
+  IconTrashXFilled,
+  IconUpload,
+  IconX,
+} from "@tabler/icons-react";
 import { _Object } from "@aws-sdk/client-s3";
 import useSWRMutation from "swr/mutation";
 
@@ -30,6 +35,7 @@ type ImageViewData = {
   id: number;
   url: string;
   description: string;
+  key: string;
 };
 
 export type imageData = {
@@ -75,6 +81,18 @@ export default function HomePage() {
     reset();
     console.log(postResponse);
     setFileData([]);
+  };
+
+  const delImage = async (key: string) => {
+    const formData = new FormData();
+    formData.append("key", key);
+    const response = await axios({
+      method: "delete",
+      url: "/api/uploads",
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    console.log(response);
   };
 
   const fetchImages = async () => {
@@ -223,15 +241,37 @@ export default function HomePage() {
             </Group>
           </form>
         </Paper>
-        {/* {data?.dataList.length! > 0 ? (
+        {data?.dataList.length! > 0 ? (
           <SimpleGrid
             cols={{ base: 1, sm: 2, lg: 5 }}
             spacing={{ base: 10, sm: "xl" }}
             verticalSpacing={{ base: "md", sm: "xl" }}
           >
-            <ImageView dataList={data?.dataList!} />
+            {data?.dataList.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  alignItems: "center",
+                  justifyContent: "start",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <img width={150} height={150} src={item.url} />
+                <Button
+                  onClick={() => delImage(item.key)}
+                  style={{
+                    alignSelf: "center",
+                    marginTop: "5px",
+                  }}
+                >
+                  <IconTrashXFilled />
+                </Button>
+                <h6>{item.description}</h6>
+              </div>
+            ))}
           </SimpleGrid>
-        ) : null} */}
+        ) : null}
       </Container>
     </div>
   );

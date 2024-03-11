@@ -5,6 +5,7 @@ import {
   GetObjectCommand,
   GetObjectCommandInput,
   PutObjectCommand,
+  DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextApiResponse } from "next";
@@ -43,7 +44,12 @@ let getPresignedUrl = async (fileName: string) => {
 async function fetchImageUrls(imageData: imageData[]) {
   const urlPromises = imageData.map(async (image: imageData) => {
     const imageUrl = await getPresignedUrl(image.imageName);
-    return { id: image.id, url: imageUrl, description: image.description };
+    return {
+      id: image.id,
+      url: imageUrl,
+      description: image.description,
+      key: image.imageName,
+    };
   });
 
   const imageUrls = await Promise.all(urlPromises);
@@ -153,5 +159,21 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
     } catch (err) {
       return NextResponse.json({ error: "Internal Server Error", err });
     }
+  }
+}
+
+export async function DELETE(req: NextRequest, res: NextApiResponse) {
+  const formData = await req.formData();
+  const keyText = formData.get("key") as string;
+  const command = new DeleteObjectCommand({
+    Bucket: process.env.NEXT_PUBLIC_BUCKETNAME,
+    Key: keyText,
+  });
+
+  try {
+    const response = await client.send(command);
+    return NextResponse.json({ response });
+  } catch (err) {
+    return NextResponse.json({ error: "Internal Server Error", err });
   }
 }
