@@ -26,7 +26,7 @@ import {
 import { _Object } from "@aws-sdk/client-s3";
 import useSWRMutation from "swr/mutation";
 import dynamic from "next/dynamic";
-const InstanceDetails = dynamic(() => import("./components/InstanceDetails"), { ssr: false })
+// const InstanceDetails = dynamic(() => import("./components/InstanceDetails"), { ssr: false })
 
 export type responseData = {
   dataList: ImageViewData[];
@@ -121,7 +121,7 @@ export default function HomePage() {
            CIS Image App
          </Title>
 
-         <InstanceDetails />
+         {/* <InstanceDetails /> */}
 
         <Paper
           withBorder
