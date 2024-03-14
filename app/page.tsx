@@ -25,6 +25,8 @@ import {
 } from "@tabler/icons-react";
 import { _Object } from "@aws-sdk/client-s3";
 import useSWRMutation from "swr/mutation";
+import dynamic from "next/dynamic";
+const InstanceDetails = dynamic(() => import("./components/InstanceDetails"), { ssr: false })
 
 export type responseData = {
   dataList: ImageViewData[];
@@ -45,10 +47,7 @@ export type imageResponse = {
   imageName: string;
 };
 
-type InstanceDataType = {
-  avaz: string,
-  ec2Id: string,
-}
+
 
 async function uploadDocuments(
   url: string,
@@ -73,11 +72,7 @@ export default function HomePage() {
   } = useForm<AddImageInput>({ resolver: zodResolver(addImageSchema) });
   const [data, setData] = useState<responseData>();
   const [fileData, setFileData] = useState<FileWithPath[]>();
-  // const [instanceData, setInstanceData] = useState<InstanceDataType>()
-
-  // useEffect(() => {
-  //   setInstanceData({avaz: process.env.NEXT_PUBLIC_AZ!!, ec2Id: process.env.NEXT_PUBLIC_INSTANCEID!!})
-  // }, [])
+  
   
 
   const onSubmit: SubmitHandler<AddImageInput> = async (data) => {
@@ -126,36 +121,7 @@ export default function HomePage() {
            CIS Image App
          </Title>
 
-         {/* <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: "10px",
-          }}
-        >
-          <Title ta="center" order={4}>
-            Instance ID:
-          </Title>
-          <Title ta="center" order={4}>
-            {instanceData?.ec2Id}
-          </Title>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: "10px",
-          }}
-        >
-          <Title ta="center" order={4}>
-            Availability Zone:
-          </Title>
-          <Title ta="center" order={4}>
-            {instanceData?.avaz}
-          </Title>
-        </div> */}
+         <InstanceDetails />
 
         <Paper
           withBorder
