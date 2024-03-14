@@ -16,7 +16,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { AddImageInput, addImageSchema } from "../schema/image-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import {
   IconHttpDelete,
@@ -47,6 +47,11 @@ export type imageResponse = {
   imageName: string;
 };
 
+type InstanceDataType = {
+  avaz: string,
+  ec2Id: string,
+}
+
 async function uploadDocuments(
   url: string,
   { arg }: { arg: { files: FileWithPath[]; description: string } }
@@ -71,6 +76,12 @@ export default function HomePage() {
   } = useForm<AddImageInput>({ resolver: zodResolver(addImageSchema) });
   const [data, setData] = useState<responseData>();
   const [fileData, setFileData] = useState<FileWithPath[]>();
+  const [instanceData, setInstanceData] = useState<InstanceDataType>()
+
+  useEffect(() => {
+    setInstanceData({avaz: process.env.NEXT_PUBLIC_AZ!!, ec2Id: process.env.NEXT_PUBLIC_INSTANCEID!!})
+  }, [])
+  
 
   const onSubmit: SubmitHandler<AddImageInput> = async (data) => {
     // data.files = fileData
@@ -105,9 +116,6 @@ export default function HomePage() {
 
   const { trigger } = useSWRMutation("/api/uploads", uploadDocuments);
 
-  let ec2Id = process.env.NEXT_PUBLIC_INSTANCEID;
-  let avaz = process.env.NEXT_PUBLIC_AZ;
-
   const selectedFiles = fileData?.map((file, index) => (
     <Text key={file.name}>
       <b>{file.name}</b> ({(file.size / 1024).toFixed(2)} kb)
@@ -134,7 +142,7 @@ export default function HomePage() {
             Instance ID:
           </Title>
           <Title ta="center" order={4}>
-            {ec2Id}
+            {instanceData?.ec2Id}
           </Title>
         </div>
         <div
@@ -149,7 +157,7 @@ export default function HomePage() {
             Availability Zone:
           </Title>
           <Title ta="center" order={4}>
-            {avaz}
+            {instanceData?.avaz}
           </Title>
         </div>
 

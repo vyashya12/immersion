@@ -21,7 +21,6 @@ export default function RootLayout({ children }: { children: any }) {
   return (
     <html lang="en">
       <head>
-        <ColorSchemeScript />
         <link rel="shortcut icon" href="/logo.png" />
         <meta
           name="viewport"
@@ -30,11 +29,9 @@ export default function RootLayout({ children }: { children: any }) {
         <title>Exabytes CIS</title>
       </head>
       <body>
-        {isClient ? 
-        <MantineProvider theme={theme} forceColorScheme="dark">
+]        <MantineProvider theme={theme} forceColorScheme="dark">
           <HydrationOverlay>{children}</HydrationOverlay>
         </MantineProvider>
-        : null}
       </body>
     </html>
   );

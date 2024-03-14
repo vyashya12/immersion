@@ -13,7 +13,7 @@ function ImageView({ dataList }: { dataList: ImageViewData[] }) {
       <h6>{item.description}</h6>
     </div>
   ));
-  return <>{items}</>;
+  return items;
 }
 
 export default ImageView;
