@@ -20,16 +20,19 @@ type imageInput = {
   description: string;
   imageName: string;
 };
+  
 
-const client = new S3Client({
-  region: process.env.NEXT_PUBLIC_AWS_REGION!,
-  credentials: {
-    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
-  },
-});
 
+
+// Function to pass in the fileName and get the url to access the image
 let getPresignedUrl = async (fileName: string) => {
+  const client = new S3Client({
+    region: process.env.NEXT_PUBLIC_AWS_REGION!,
+    credentials: {
+      accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
+    },
+  });
   const bucketParams: GetObjectCommandInput = {
     Bucket: process.env.NEXT_PUBLIC_BUCKETNAME,
     Key: fileName,
@@ -41,6 +44,7 @@ let getPresignedUrl = async (fileName: string) => {
   return signedUrl;
 };
 
+// Function to fetch all the contents from bucket and also call getpresignedUrl using the imageNames
 async function fetchImageUrls(imageData: imageData[]) {
   const urlPromises = imageData.map(async (image: imageData) => {
     const imageUrl = await getPresignedUrl(image.imageName);
@@ -56,6 +60,7 @@ async function fetchImageUrls(imageData: imageData[]) {
   return imageUrls;
 }
 
+// GET request function to fetch images and description and render in client
 export async function GET(req: NextRequest) {
   const imageData = await prisma.imageTable.findMany();
   let dataList = await fetchImageUrls(imageData);
@@ -66,7 +71,15 @@ export async function GET(req: NextRequest) {
   );
 }
 
+// POST request function to upload images to S3 and write filename and description to RDS MYSQL db
 export async function POST(req: NextRequest, res: NextApiResponse) {
+  const client = new S3Client({
+    region: process.env.NEXT_PUBLIC_AWS_REGION!,
+    credentials: {
+      accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
+    },
+  });
   let imageKey = `${new Date(Date.now())
     .toLocaleDateString("id-ID", {
       day: "2-digit",
@@ -97,7 +110,6 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
           { status: 400 }
         );
       }
-      console.log(buffer);
       client.send(
         new PutObjectCommand({
           Bucket: process.env.NEXT_PUBLIC_BUCKETNAME,
@@ -162,7 +174,16 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
   }
 }
 
+
+// DELETE Request Function to delete an image only from S3 and not the entry in RDS MYSQL since I want to restore s3 from a backup and show the images again
 export async function DELETE(req: NextRequest, res: NextApiResponse) {
+  const client = new S3Client({
+    region: process.env.NEXT_PUBLIC_AWS_REGION!,
+    credentials: {
+      accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
+    },
+  });
   const formData = await req.formData();
   const keyText = formData.get("key") as string;
   const command = new DeleteObjectCommand({
