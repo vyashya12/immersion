@@ -7,7 +7,6 @@ import {
   Container,
   Group,
   Text,
-  Space,
   rem,
   CloseButton,
   SimpleGrid,
@@ -19,7 +18,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import {
-  IconHttpDelete,
   IconPhoto,
   IconTrashXFilled,
   IconUpload,
@@ -71,7 +69,6 @@ export default function HomePage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
   } = useForm<AddImageInput>({ resolver: zodResolver(addImageSchema) });
   const [data, setData] = useState<responseData>();
@@ -103,7 +100,6 @@ export default function HomePage() {
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     });
-    console.log(response);
   };
 
   const fetchImages = async () => {
