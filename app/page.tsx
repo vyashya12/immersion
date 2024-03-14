@@ -73,11 +73,11 @@ export default function HomePage() {
   } = useForm<AddImageInput>({ resolver: zodResolver(addImageSchema) });
   const [data, setData] = useState<responseData>();
   const [fileData, setFileData] = useState<FileWithPath[]>();
-  const [instanceData, setInstanceData] = useState<InstanceDataType>()
+  // const [instanceData, setInstanceData] = useState<InstanceDataType>()
 
-  useEffect(() => {
-    setInstanceData({avaz: process.env.NEXT_PUBLIC_AZ!!, ec2Id: process.env.NEXT_PUBLIC_INSTANCEID!!})
-  }, [])
+  // useEffect(() => {
+  //   setInstanceData({avaz: process.env.NEXT_PUBLIC_AZ!!, ec2Id: process.env.NEXT_PUBLIC_INSTANCEID!!})
+  // }, [])
   
 
   const onSubmit: SubmitHandler<AddImageInput> = async (data) => {
@@ -122,11 +122,11 @@ export default function HomePage() {
   return (
     <div>
       <Container my={30}>
-        <Title ta="center" order={1}>
-          CIS Image App
-        </Title>
+         <Title ta="center" order={1}>
+           CIS Image App
+         </Title>
 
-        <div
+         {/* <div
           style={{
             display: "flex",
             flexDirection: "row",
@@ -155,7 +155,7 @@ export default function HomePage() {
           <Title ta="center" order={4}>
             {instanceData?.avaz}
           </Title>
-        </div>
+        </div> */}
 
         <Paper
           withBorder
