@@ -25,7 +25,7 @@ export default function InstanceDetails() {
           <Title ta="center" order={4}>
             Instance ID:
           </Title>
-          <Title ta="center" order={4}>
+          <Title ta="center" order={4} suppressHydrationWarning>
             {instanceData?.ec2Id}
           </Title>
         </div>
@@ -40,7 +40,7 @@ export default function InstanceDetails() {
           <Title ta="center" order={4}>
             Availability Zone:
           </Title>
-          <Title ta="center" order={4}>
+          <Title ta="center" order={4} suppressHydrationWarning>
             {instanceData?.avaz}
           </Title>
         </div>
