@@ -1,4 +1,3 @@
-"use client"
 import "@mantine/core/styles.css";
 import React, {useEffect, useState} from "react";
 import { MantineProvider, ColorSchemeScript } from "@mantine/core";
@@ -13,11 +12,6 @@ import { HydrationOverlay } from "@builder.io/react-hydration-overlay";
 // };
 
 export default function RootLayout({ children }: { children: any }) {
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
   return (
     <html lang="en">
       <head>
@@ -29,7 +23,7 @@ export default function RootLayout({ children }: { children: any }) {
         <title>Exabytes CIS</title>
       </head>
       <body>
-]        <MantineProvider theme={theme} forceColorScheme="dark">
+        <MantineProvider theme={theme} forceColorScheme="dark">
           <HydrationOverlay>{children}</HydrationOverlay>
         </MantineProvider>
       </body>
