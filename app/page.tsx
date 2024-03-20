@@ -25,6 +25,7 @@ import {
 } from "@tabler/icons-react";
 import { _Object } from "@aws-sdk/client-s3";
 import useSWRMutation from "swr/mutation";
+import InstanceDetails from "./components/InstanceDetails";
 // import dynamic from "next/dynamic";
 // const InstanceDetails = dynamic(() => import("./components/InstanceDetails"), { ssr: false })
 
@@ -121,7 +122,7 @@ export default function HomePage() {
            CIS Image App
          </Title>
 
-         {/* <InstanceDetails /> */}
+         <InstanceDetails />
 
         <Paper
           withBorder
@@ -140,7 +141,8 @@ export default function HomePage() {
               onReject={(files) => console.log("rejected files", files)}
               maxSize={5 * 1024 ** 2}
               accept={IMAGE_MIME_TYPE}
-              name="files"
+              maxFiles={1}
+              {...register("files")}
             >
               <Group
                 justify="center"

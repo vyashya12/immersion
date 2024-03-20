@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 
 
+export async function GET(req: NextRequest, res: NextResponse) {
+  if(process.env.NEXT_PUBLIC_AZ && process.env.NEXT_PUBLIC_INSTANCEID) {
+    return NextResponse.json({
+      status: 200,
+      message: {"AZ": process.env.NEXT_PUBLIC_AZ, "InstanceID": process.env.NEXT_PUBLIC_INSTANCEID},
+    });
+  } else {
+    return NextResponse.json({
+      status: 500,
+      message: {"AZ": "No AZ Found", "InstanceID": "No ID found"},
+    });
+  }
+}
+
 export async function POST(req: NextRequest, res: NextResponse) {
     const startTime = new Date().getTime();
     while (new Date().getTime() - startTime < 30000) {
