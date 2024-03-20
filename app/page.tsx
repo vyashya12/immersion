@@ -142,7 +142,7 @@ export default function HomePage() {
               maxSize={5 * 1024 ** 2}
               accept={IMAGE_MIME_TYPE}
               maxFiles={1}
-              {...register("files")}
+              name="file"
             >
               <Group
                 justify="center"
